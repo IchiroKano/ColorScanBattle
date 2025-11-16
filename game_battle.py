@@ -1,5 +1,8 @@
+# Organized imports
 import random
 from game_utils import log_to_file
+# max_turn を game_utils からインポート
+from game_utils import max_turn
 
 ACTIONS = ["攻撃", "防御", "回復", "魔法", "ジャンプ"]
 
@@ -123,12 +126,12 @@ class BattleManager:
         self.jump_start_frame1 = 0
         self.jump_start_frame2 = 0
 
-    def advance_step(self, now):
+    def advance_step(self, now, game_state):
 
-        if self.turn > 7:
+        if self.turn > max_turn:  # max_turn を使用してターン数を制御
             return "result"
 
-        if self.step == 1 and now - self.timer >= 2000:  # ステップ1の遅延を2秒に設定
+        if self.step == 1 :#and now - self.timer >= 2000:  # ステップ1の遅延を2秒に設定
             self.battle_log.append(f"対戦 {self.turn} GO!")
             log_to_file(f"\n//----- 対戦 {self.turn} GO!")
             self.step = 2
@@ -148,13 +151,15 @@ class BattleManager:
             self.step = 3
             self.timer = now
 
-        elif self.step == 3 and now - self.timer >= 1000:
+        elif self.step == 3 :#and now - self.timer >= 1000:
             self.turn += 1
             self.step = 1
             self.timer = now
             log_to_file(f"info: ターン{self.turn}に進行しました。")
+            game_state.turn_updated = True  # ターン更新フラグを設定
 
         return "battle"
 
     def is_battle_over(self):
-        return self.turn > 7 or self.hp1 <= 0 or self.hp2 <= 0
+        log_to_file(f"[DEBUG] is_battle_over: turn={self.turn}, hp1={self.hp1}, hp2={self.hp2}, max_turn={max_turn}")
+        return self.turn > max_turn or self.hp1 <= 0 or self.hp2 <= 0

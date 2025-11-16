@@ -1,18 +1,23 @@
 #--------------------------------
 # 共通関数はこのファイルに記載する
 #--------------------------------
-
 import pygame
+
+# default_volume を統一
+# 音量のデフォルト値
+default_volume = 0.1
+
+# 最大ターン数
+max_turn = 3
+
 
 # ログファイルを初期化する関数
 def initialize_log_file():
-    with open("battle_log.txt", "w", encoding="utf-8") as log_file:
-        log_file.write("ログファイルを初期化しました。\n")
-
-# ログをファイルに出力する関数
-def log_to_file(log_message):
-    with open("battle_log.txt", "a", encoding="utf-8") as log_file:
-        log_file.write(log_message + "\n")
+    """ログファイルを初期化する"""
+    with open("battle_log.txt", "w", encoding="utf-8") as f:
+        f.write("")  # battle_log.txt を空にする
+    with open("input_prompt.txt", "w", encoding="utf-8") as f:
+        f.write("")  # input_prompt.txt を空にする
 
 # JSONパラメータをゲーム内パラメータに補正 基準50+補正(JSON値の0.5倍)
 def convert_param(value):
@@ -21,6 +26,23 @@ def convert_param(value):
     except Exception as e:
         print("[ERROR] convert_param failed:", value, e)
         return 50
+
+# ログメッセージをファイルに書き込む関数
+def log_to_file(message):
+    """
+    ログメッセージをファイルに書き込む
+    """
+    with open("battle_log.txt", "a", encoding="utf-8") as f:
+        f.write(message + "\n")
+
+# 入力プロンプトをファイルに書き込む関数
+def prompt_to_file(message):
+    """
+    入力プロンプトをファイルに書き込む
+    """
+    with open("input_prompt.txt", "a", encoding="utf-8") as f:
+        f.write(message + "\n")
+
 
 # 音楽ファイルの一元管理
 music_files = {
@@ -42,4 +64,5 @@ def load_sounds():
         'defence': pygame.mixer.Sound("music/fight_defence.wav"),
         'jump': pygame.mixer.Sound("music/fight_jump.wav")
     }
+
 

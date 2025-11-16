@@ -1,13 +1,20 @@
 import pygame
 import math
 import random
-from game_utils import music_files, load_sounds
+from game_utils import music_files, load_sounds, default_volume
 
 # pygame.mixerの初期化
 pygame.mixer.init()
 
 # 効果音をロード
 sounds = load_sounds()
+
+# 効果音の再生前に音量を設定
+sounds['attack'].set_volume(default_volume)
+sounds['magic'].set_volume(default_volume)
+sounds['defence'].set_volume(default_volume)
+sounds['jump'].set_volume(default_volume)
+sounds['healing'].set_volume(default_volume)
 
 # 攻撃エフェクト
 def draw_attack_effect(screen, img, x, y, side):

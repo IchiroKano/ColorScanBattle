@@ -2,7 +2,6 @@ import pygame
 import os
 import json
 from game_utils import convert_param, log_to_file
-from game_ai import add_player_parameters
 
 # プレイヤーのオブジェクト
 class PlayerManager:
@@ -11,6 +10,7 @@ class PlayerManager:
         self.player_data = {}
         self.player_images = {}
         self.eyecatch_images = {}
+        self.player_parameters = ""
 
     # JSONデータと画像の読み込み
     def load_player(self, player_key):
@@ -33,16 +33,18 @@ class PlayerManager:
 
             self.player_data[player_key] = data
 
-            # パラメータ計算後のログ出力
+            # パラメータ計算後のログ出力, AI実況のためのプレイヤー情報★
             log_to_file(f"ステージング(ロード完了)： {player_key} : 攻撃力={data['攻撃力']}, 防御力={data['防御力']}, すばやさ={data['すばやさ']}, 回復力={data['回復力']}, 回避力={data['回避力']}, 体力={data['体力']}, 色系統={data['色系統']}, キャラ名={data['キャラ名']}, スキルセット={data['スキルセット']}, 画像ファイル={data['画像ファイル']}")
-            add_player_parameters(f"{player_key} : 色系統={data['色系統']}, キャラ名={data['キャラ名']}, スキルセット={data['スキルセット']}")
+            self.player_parameters += (f"■選手 {player_key} のプレイヤー名は{data['キャラ名']}。色系統は{data['色系統']}。スキルセットは{data['スキルセット']}。その他属性は、攻撃力={data['攻撃力']}, 防御力={data['防御力']}, すばやさ={data['すばやさ']}, 回復力={data['回復力']}, 回避力={data['回避力']}, 体力={data['体力']}です。\n")
 
             # キャラクター画像の読み込み
             img_path = os.path.join("img", data["画像ファイル"])
             original_image = pygame.image.load(img_path)
             if player_key == "player1":
+                # 右を向く
                 self.player_images[player_key] = pygame.transform.flip(original_image, True, False)
             else:
+                # 左を向く
                 self.player_images[player_key] = original_image
 
             # アイキャッチ画像の読み込み
@@ -95,4 +97,5 @@ def draw_player_info(screen, font, bold_font, data, image, x, width, height):
         scale = 0.5
         image = pygame.transform.scale(image, (int(img_w * scale), int(img_h * scale)))
         screen.blit(image, (x, int(height * 0.6)))
+
 
